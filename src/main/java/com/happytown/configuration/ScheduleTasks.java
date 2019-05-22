@@ -30,7 +30,7 @@ public class ScheduleTasks {
         LOGGER.info("Start Task attribuerCadeaux");
         String fileName = "src/main/resources/cadeaux.txt";
         LocalDate now = LocalDate.now();
-        happyTownService.attribuerCadeaux(fileName, now, SMTP_HOST, SMTP_PORT);
+     //   happyTownService.attribuerCadeaux(fileName, now, SMTP_HOST, SMTP_PORT);
         LOGGER.info("End Task attribuerCadeaux");
     }
 }

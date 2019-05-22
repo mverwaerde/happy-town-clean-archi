@@ -1,6 +1,6 @@
 package com.happytown.controller;
 
-import com.happytown.domain.Habitant;
+import com.happytown.core.entities.Habitant;
 import com.happytown.service.HabitantService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,11 +20,11 @@ public class HabitantController {
     public HabitantController(HabitantService habitantService) {
         this.habitantService = habitantService;
     }
-
+/*
     @GetMapping
     @ApiOperation("Retourne la liste des habitants de Happy Town")
     public List<Habitant> getAllHabitants() {
         return habitantService.getAll();
     }
-
+*/
 }

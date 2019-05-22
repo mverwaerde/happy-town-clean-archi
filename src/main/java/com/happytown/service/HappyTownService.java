@@ -1,31 +1,13 @@
 package com.happytown.service;
 
-import com.happytown.domain.Cadeau;
-import com.happytown.domain.Habitant;
-import com.happytown.domain.TrancheAge;
-import com.happytown.repository.HabitantRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.*;
 
 @Service
 @Transactional
 public class HappyTownService {
 
-    private final HabitantRepository habitantRepository;
+  /*  private final HabitantRepository habitantRepository;
     private final Random random;
 
     public HappyTownService(HabitantRepository habitantRepository) {
@@ -105,7 +87,7 @@ public class HappyTownService {
             String body = "Bonjour,";
             body += "\n\nVoici la liste récapitulative des cadeaux du jour : ";
             for (Habitant habitantAttributionCadeau : habitantsAttributionCadeau) {
-                body += " \n* " + habitantAttributionCadeau.getPrenom() + " " + habitantAttributionCadeau.getNom() + " : " + habitantAttributionCadeau.getCadeauOffert();
+             //   body += " \n* " + habitantAttributionCadeau.getPrenom() + " " + habitantAttributionCadeau.getNom() + " : " + habitantAttributionCadeau.getCadeauOffert();
             }
             body += "\n\nMerci!";
             envoiMail(smtpHost, smtpPort, subject, beneficiaire, body);
@@ -126,5 +108,5 @@ public class HappyTownService {
 
         Transport.send(msg);
     }
-
+*/
 }

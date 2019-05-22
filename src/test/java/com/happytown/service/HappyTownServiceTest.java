@@ -1,38 +1,13 @@
 package com.happytown.service;
 
-import com.dumbster.smtp.SimpleSmtpServer;
-import com.dumbster.smtp.SmtpMessage;
-import com.happytown.domain.Habitant;
-import com.happytown.repository.HabitantRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Iterator;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.Lists.newArrayList;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class HappyTownServiceTest {
 
-    @InjectMocks
+ /*   @InjectMocks
     HappyTownService happyTownService;
-
-    @Mock
-    HabitantRepository habitantRepository;
 
     private SimpleSmtpServer mailServer;
 
@@ -332,5 +307,8 @@ class HappyTownServiceTest {
         assertThat(habitantSaved.getCadeauOffert()).containsPattern(regExpRefCadeau);
         assertThat(habitantSaved.getDateAttributionCadeau()).isEqualTo(NOW);
     }
+
+
+  */
 }
 
