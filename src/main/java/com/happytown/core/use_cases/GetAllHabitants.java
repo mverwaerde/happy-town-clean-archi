@@ -6,7 +6,9 @@ import java.util.List;
 
 public class GetAllHabitants {
 
+    HabitantProvider habitantProvider;
+
     public List<Habitant> execute() {
-        return null;
+        return habitantProvider.getAll();
     }
 }

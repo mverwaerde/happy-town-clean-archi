@@ -27,7 +27,7 @@ class HabitantServiceTest {
     @Test
     void getAll_shouldReturnAllHabitants() {
         // Given
-        List<Habitant> habitants = Lists.newArrayList(HabitantFixture.aHabitant());
+        List<Habitant> habitants = Lists.newArrayList(HabitantFixture.aHabitant_sansCadeau());
         BDDMockito.doReturn(habitants).when(provider).getAll();
 
         // When

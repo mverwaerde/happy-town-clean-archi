@@ -2,11 +2,13 @@ package com.happytown.dataproviders.database;
 
 import com.happytown.core.entities.Habitant;
 import com.happytown.core.use_cases.HabitantProvider;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class HabitantDatabaseProvider implements HabitantProvider {
 
     HabitantJpaRepository repository;
@@ -21,7 +23,10 @@ public class HabitantDatabaseProvider implements HabitantProvider {
 
     @Override
     public List<Habitant> getElligiblesCadeaux(LocalDate dateArriveeCommune) {
-        return null;
+        return repository.findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(dateArriveeCommune)
+                .stream()
+                .map(this::toHabitant)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -17,4 +17,12 @@ public class TrancheAge {
     public Integer getAgeMax() {
         return ageMax;
     }
+
+    @Override
+    public String toString() {
+        return "TrancheAge{" +
+                "ageMin=" + ageMin +
+                ", ageMax=" + ageMax +
+                '}';
+    }
 }

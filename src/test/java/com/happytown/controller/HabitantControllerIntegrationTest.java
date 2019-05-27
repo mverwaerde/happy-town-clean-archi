@@ -21,7 +21,7 @@ class HabitantControllerIntegrationTest {
     @Test
     void execute() throws Exception {
         // Given
-        Habitant habitant = HabitantFixture.aHabitant();
+        Habitant habitant = HabitantFixture.aHabitant_sansCadeau();
         when(habitantService.getAll()).thenReturn(Lists.newArrayList(habitant));
 
         // When Then

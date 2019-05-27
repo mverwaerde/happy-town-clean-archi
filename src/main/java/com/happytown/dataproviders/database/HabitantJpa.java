@@ -1,6 +1,7 @@
 package com.happytown.dataproviders.database;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 @Table(name = "habitant")
 public class HabitantJpa {
 
+    @Id
     private String id;
     private String nom;
     private String prenom;

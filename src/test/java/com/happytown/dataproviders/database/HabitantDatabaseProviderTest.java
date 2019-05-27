@@ -1,7 +1,7 @@
 package com.happytown.dataproviders.database;
 
 import com.happytown.core.entities.Habitant;
-import org.assertj.core.api.Assertions;
+import com.happytown.fixtures.HabitantJpaFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class HabitantDatabaseProviderTest {
@@ -54,6 +54,21 @@ public class HabitantDatabaseProviderTest {
                 null);
 
         assertThat(allHabitants.get(0)).isEqualToComparingFieldByField(expectedHabitant);
+
+    }
+
+    @Test
+    public void shouldReturnHabitantWithCadeau_whenHabitantHaveNotYetAcadeau() {
+        // Arrange
+        HabitantJpa habitantJpaSansCadeau = HabitantJpaFixture.aHabitantJpaSansCadeau();
+        LocalDate dateArriveeCommune = LocalDate.of(2016, 12, 1);
+        BDDMockito.doReturn(List.of(habitantJpaSansCadeau)).when(repository).findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(dateArriveeCommune);
+
+        // Act
+        List<Habitant> elligiblesCadeaux = provider.getElligiblesCadeaux(dateArriveeCommune);
+        // Assert
+
+        assertThat(elligiblesCadeaux.get(0)).isEqualToComparingFieldByField(habitantJpaSansCadeau);
 
     }
 }

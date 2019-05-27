@@ -4,6 +4,7 @@ import com.happytown.core.entities.Cadeau;
 import com.happytown.core.entities.Habitant;
 import com.happytown.core.entities.TrancheAge;
 import com.happytown.core.use_cases.HabitantProvider;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.Message;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 
+@Service
 @Transactional
 public class HappyTownService {
 

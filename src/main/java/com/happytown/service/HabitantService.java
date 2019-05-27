@@ -2,10 +2,12 @@ package com.happytown.service;
 
 import com.happytown.core.entities.Habitant;
 import com.happytown.core.use_cases.HabitantProvider;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
 @Transactional
 public class HabitantService {
 

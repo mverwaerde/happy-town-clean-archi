@@ -24,9 +24,9 @@ public class GetAllHabitantsTest {
     @Test
     public void shouldreturnAllHabitant() {
         // Arrange
-        Habitant habitant = HabitantFixture.aHabitant();
+        Habitant habitant = HabitantFixture.aHabitant_sansCadeau();
         List<Habitant> habitants = List.of(habitant);
-        Mockito.doReturn(habitants).when(provider.getAll());
+        Mockito.doReturn(habitants).when(provider).getAll();
 
         // Act
         List<Habitant> results = getAllHabitants.execute();
