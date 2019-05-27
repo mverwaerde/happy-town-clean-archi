@@ -1,20 +1,22 @@
 package com.happytown.service;
 
-import org.springframework.stereotype.Service;
+import com.happytown.core.entities.Habitant;
+import com.happytown.core.use_cases.HabitantProvider;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+import java.util.List;
+
 @Transactional
 public class HabitantService {
 
- /*   private final HabitantRepository habitantRepository;
+    private final HabitantProvider habitantProvider;
 
-    public HabitantService(HabitantRepository habitantRepository) {
-        this.habitantRepository = habitantRepository;
+    public HabitantService(HabitantProvider habitantProvider) {
+        this.habitantProvider = habitantProvider;
     }
 
     public List<Habitant> getAll() {
-        return habitantRepository.findAll();
+        return habitantProvider.getAll();
     }
-*/
+
 }

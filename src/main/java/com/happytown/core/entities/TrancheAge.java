@@ -9,4 +9,12 @@ public class TrancheAge {
         this.ageMin = ageMin;
         this.ageMax = ageMax;
     }
+
+    public Integer getAgeMin() {
+        return ageMin;
+    }
+
+    public Integer getAgeMax() {
+        return ageMax;
+    }
 }

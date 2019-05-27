@@ -1,13 +1,38 @@
 package com.happytown.service;
 
+import com.dumbster.smtp.SimpleSmtpServer;
+import com.dumbster.smtp.SmtpMessage;
+import com.happytown.core.entities.Habitant;
+import com.happytown.core.use_cases.HabitantProvider;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Lists.newArrayList;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class HappyTownServiceTest {
 
- /*   @InjectMocks
+    @InjectMocks
     HappyTownService happyTownService;
+
+    @Mock
+    HabitantProvider habitantProvider;
 
     private SimpleSmtpServer mailServer;
 
@@ -42,18 +67,18 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge0_3() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Paron")
-                .prenom("Elise")
-                .adressePostale("48 faubourg de la Plage")
-                .email("elise.paron@example.fr")
-                .dateNaissance(LocalDate.of(2018, 6, 22))
-                .dateArriveeCommune(LocalDate.of(2017, 5, 1))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Paron";
+        String prenom = "Elise";
+        String adressePostale = "48 faubourg de la Plage";
+        String email = "elise.paron@example.fr";
+        LocalDate dateNaissance = LocalDate.of(2018, 6, 22);
+        LocalDate dateArriveeCommune = LocalDate.of(2017, 5, 1);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
+
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -66,18 +91,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge3_6() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Giron")
-                .prenom("Manon")
-                .adressePostale("2 rue des Apotres")
-                .email("manon.giron@example.fr")
-                .dateNaissance(LocalDate.of(2012, 10, 2))
-                .dateArriveeCommune(LocalDate.of(2017, 5, 1))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Giron";
+        String prenom = "Manon";
+        String adressePostale = "2 rue des Apotres";
+        String email = "manon.giron@example.fr";
+        LocalDate dateNaissance = LocalDate.of(2012, 10, 2);
+        LocalDate dateArriveeCommune = LocalDate.of(2017, 5, 1);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -90,18 +114,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge6_10() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Perraud")
-                .prenom("Lucas")
-                .adressePostale("17 boulevard des Capucines")
-                .email("lucas.perraud@example.fr")
-                .dateNaissance(LocalDate.of(2011, 4, 4))
-                .dateArriveeCommune(LocalDate.of(2017, 9, 10))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Perraud";
+        String prenom = "Lucas";
+        String adressePostale = "17 boulevard des Capucines";
+        String email = "lucas.perraud@example.fr";
+        LocalDate dateNaissance = LocalDate.of(2011, 4, 4);
+        LocalDate dateArriveeCommune = LocalDate.of(2017, 9, 10);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -114,18 +137,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge10_15() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Leduc")
-                .prenom("Etienne")
-                .adressePostale("28 square du Bois Fleuri")
-                .email("etienne.leduc@example.fr")
-                .dateNaissance(LocalDate.of(2006, 5, 14))
-                .dateArriveeCommune(LocalDate.of(2017, 9, 10))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Leduc";
+        String prenom = "Etienne";
+        String adressePostale = "28 square du Bois Fleuri";
+        String email = "etienne.leduc@example.fr";
+        LocalDate dateNaissance = LocalDate.of(2006, 5, 14);
+        LocalDate dateArriveeCommune = LocalDate.of(2017, 9, 10);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -138,18 +160,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge15_20() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Guilbaud")
-                .prenom("Elodie")
-                .adressePostale("1 impasse du Cheval Blanc")
-                .email("elodie.guilbaud@example.fr")
-                .dateNaissance(LocalDate.of(1998, 10, 2))
-                .dateArriveeCommune(LocalDate.of(2017, 10, 1))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Guilbaud";
+        String prenom = "Elodie";
+        String adressePostale = "1 impasse du Cheval Blanc";
+        String email = "elodie.guilbaud@example.fr";
+        LocalDate dateNaissance = LocalDate.of(1998, 10, 2);
+        LocalDate dateArriveeCommune = LocalDate.of(2017, 10, 1);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -162,18 +183,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge20_30() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Newman")
-                .prenom("Paul")
-                .adressePostale("14 chemin Edmond Rostand")
-                .email("paul.newman@example.fr")
-                .dateNaissance(LocalDate.of(1998, 10, 1))
-                .dateArriveeCommune(LocalDate.of(2017, 10, 1))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Newman";
+        String prenom = "Paul";
+        String adressePostale = "14 chemin Edmond Rostand";
+        String email = "paul.newman@example.fr";
+        LocalDate dateNaissance = LocalDate.of(1998, 10, 1);
+        LocalDate dateArriveeCommune = LocalDate.of(2017, 10, 1);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -186,18 +206,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge30_40() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Carin")
-                .prenom("Marie")
-                .adressePostale("12 rue des Lilas")
-                .email("marie.carin@example.fr")
-                .dateNaissance(LocalDate.of(1980, 10, 8))
-                .dateArriveeCommune(LocalDate.of(2016, 12, 1))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Carin";
+        String prenom = "Marie";
+        String adressePostale = "12 rue des Lilas";
+        String email = "marie.carin@example.fr";
+        LocalDate dateNaissance = LocalDate.of(1980, 10, 8);
+        LocalDate dateArriveeCommune = LocalDate.of(2016, 12, 1);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -210,18 +229,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge40_50() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Dumond")
-                .prenom("Michel")
-                .adressePostale("18 square de Crusoe")
-                .email("michel.dumond@example.fr")
-                .dateNaissance(LocalDate.of(1970, 10, 25))
-                .dateArriveeCommune(LocalDate.of(2016, 12, 1))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Dumond";
+        String prenom = "Michel";
+        String adressePostale = "18 square de Crusoe";
+        String email = "michel.dumond@example.fr";
+        LocalDate dateNaissance = LocalDate.of(1970, 10, 25);
+        LocalDate dateArriveeCommune = LocalDate.of(2016, 12, 1);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -234,18 +252,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge50_60() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Avro")
-                .prenom("Julien")
-                .adressePostale("15 rue Apigi")
-                .email("julien.avro@example.fr")
-                .dateNaissance(LocalDate.of(1965, 6, 25))
-                .dateArriveeCommune(LocalDate.of(2016, 12, 1))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Avro";
+        String prenom = "Julien";
+        String adressePostale = "15 rue Apigi";
+        String email = "julien.avro@example.fr";
+        LocalDate dateNaissance = LocalDate.of(1965, 6, 25);
+        LocalDate dateArriveeCommune = LocalDate.of(2016, 12, 1);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -258,18 +275,17 @@ class HappyTownServiceTest {
     @Test
     void attribuerCadeaux_habitantTrancheAge60_150() throws IOException, MessagingException {
         // Given
-        Habitant habitant = Habitant.builder()
-                .id(UUID.randomUUID().toString())
-                .nom("Pascalin")
-                .prenom("Yvette")
-                .adressePostale("34 rue des Koali")
-                .email("yvette.pascalin@example.fr")
-                .dateNaissance(LocalDate.of(1958, 2, 14))
-                .dateArriveeCommune(LocalDate.of(2016, 12, 1))
-                .build();
+        String id = UUID.randomUUID().toString();
+        String nom = "Pascalin";
+        String prenom = "Yvette";
+        String adressePostale = "34 rue des Koali";
+        String email = "yvette.pascalin@example.fr";
+        LocalDate dateNaissance = LocalDate.of(1958, 2, 14);
+        LocalDate dateArriveeCommune = LocalDate.of(2016, 12, 1);
+        Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
         doReturn(newArrayList(habitant))
-                .when(habitantRepository)
-                .findByDateArriveeCommuneLessThanEqualAndCadeauOffertIsNullAndDateAttributionCadeauIsNullOrderByDateArriveeCommune(NOW_MINUS_ONE_YEAR);
+                .when(habitantProvider)
+                .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
         happyTownService.attribuerCadeaux(FILE_NAME, NOW, SMTP_HOST, SMTP_PORT);
@@ -302,13 +318,10 @@ class HappyTownServiceTest {
 
     private void verifyHabitantSaved(Pattern regExpRefCadeau) {
         ArgumentCaptor<Habitant> habitantArgumentCaptor = ArgumentCaptor.forClass(Habitant.class);
-        verify(habitantRepository).save(habitantArgumentCaptor.capture());
+        verify(habitantProvider).save(habitantArgumentCaptor.capture());
         Habitant habitantSaved = habitantArgumentCaptor.getValue();
         assertThat(habitantSaved.getCadeauOffert()).containsPattern(regExpRefCadeau);
         assertThat(habitantSaved.getDateAttributionCadeau()).isEqualTo(NOW);
     }
-
-
-  */
 }
 

@@ -13,6 +13,13 @@ public class Cadeau {
 
     private TrancheAge trancheAge;
 
+    public Cadeau(String reference, String description, BigDecimal montant, TrancheAge trancheAge) {
+        this.reference = reference;
+        this.description = description;
+        this.montant = montant;
+        this.trancheAge = trancheAge;
+    }
+
     public String getDetail() {
         return this.description + " " +
                 "(Montant : " + this.montant + "€ - " +

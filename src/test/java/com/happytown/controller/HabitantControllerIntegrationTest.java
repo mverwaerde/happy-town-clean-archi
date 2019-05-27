@@ -19,7 +19,7 @@ class HabitantControllerIntegrationTest {
     HabitantService habitantService;
 /*
     @Test
-    void getAllHabitants() throws Exception {
+    void execute() throws Exception {
         // Given
         Habitant habitant = HabitantFixture.aHabitant();
         when(habitantService.getAll()).thenReturn(Lists.newArrayList(habitant));

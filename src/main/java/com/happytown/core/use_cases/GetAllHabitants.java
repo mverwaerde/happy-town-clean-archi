@@ -1,4 +1,12 @@
 package com.happytown.core.use_cases;
 
-public class GetAllHabitants implements HabitantProvider {
+import com.happytown.core.entities.Habitant;
+
+import java.util.List;
+
+public class GetAllHabitants {
+
+    public List<Habitant> execute() {
+        return null;
+    }
 }
