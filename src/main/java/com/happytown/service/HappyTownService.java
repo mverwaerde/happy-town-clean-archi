@@ -104,7 +104,7 @@ public class HappyTownService {
             String body = "Bonjour,";
             body += "\n\nVoici la liste récapitulative des cadeaux du jour : ";
             for (Habitant habitantAttributionCadeau : habitantsAttributionCadeau) {
-             //   body += " \n* " + habitantAttributionCadeau.getPrenom() + " " + habitantAttributionCadeau.getNom() + " : " + habitantAttributionCadeau.getCadeauOffert();
+                body += " \n* " + habitantAttributionCadeau.getPrenom() + " " + habitantAttributionCadeau.getNom() + " : " + habitantAttributionCadeau.getCadeauOffert();
             }
             body += "\n\nMerci!";
             envoiMail(smtpHost, smtpPort, subject, beneficiaire, body);

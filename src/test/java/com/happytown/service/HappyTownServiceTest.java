@@ -98,7 +98,9 @@ class HappyTownServiceTest {
         String email = "manon.giron@example.fr";
         LocalDate dateNaissance = LocalDate.of(2012, 10, 2);
         LocalDate dateArriveeCommune = LocalDate.of(2017, 5, 1);
+
         Habitant habitant = new Habitant(id, nom, prenom, email, dateNaissance, dateArriveeCommune, adressePostale, null, null);
+
         doReturn(newArrayList(habitant))
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
