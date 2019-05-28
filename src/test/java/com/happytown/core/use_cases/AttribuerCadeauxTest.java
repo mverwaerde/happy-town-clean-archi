@@ -1,4 +1,4 @@
-package com.happytown.service;
+package com.happytown.core.use_cases;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;

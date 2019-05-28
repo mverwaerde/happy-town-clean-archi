@@ -1,4 +1,4 @@
-package com.happytown.service;
+package com.happytown.core.entities;
 
 import com.happytown.core.entities.TrancheAge;
 import com.happytown.core.entities.TrancheAgeComparator;

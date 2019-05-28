@@ -1,4 +1,4 @@
-package com.happytown.controller;
+package com.happytown.entrypoints;
 
 import com.happytown.core.use_cases.AttribuerCadeaux;
 import com.happytown.entrypoints.rest.AttributionCadeauxEndpoint;
