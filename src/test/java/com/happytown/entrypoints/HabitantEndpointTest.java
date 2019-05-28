@@ -2,6 +2,7 @@ package com.happytown.entrypoints;
 
 import com.happytown.core.entities.Habitant;
 import com.happytown.core.use_cases.GetAllHabitants;
+import com.happytown.entrypoints.rest.HabitantEndpoint;
 import com.happytown.fixtures.HabitantFixture;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;

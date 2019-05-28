@@ -8,7 +8,11 @@ import java.util.List;
 @Component
 public class GetAllHabitants {
 
-    HabitantProvider habitantProvider;
+    private final HabitantProvider habitantProvider;
+
+    public GetAllHabitants(HabitantProvider habitantProvider) {
+        this.habitantProvider = habitantProvider;
+    }
 
     public List<Habitant> execute() {
         return habitantProvider.getAll();

@@ -1,4 +1,4 @@
-package com.happytown.entrypoints;
+package com.happytown.entrypoints.rest;
 
 import com.happytown.core.entities.Habitant;
 import com.happytown.core.use_cases.GetAllHabitants;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Api(value = "API de gestion des habitants de Happy Town")
 public class HabitantEndpoint {
 
-    private GetAllHabitants getAllHabitants;
+    private final GetAllHabitants getAllHabitants;
 
     public HabitantEndpoint(GetAllHabitants getAllHabitants) {
         this.getAllHabitants = getAllHabitants;

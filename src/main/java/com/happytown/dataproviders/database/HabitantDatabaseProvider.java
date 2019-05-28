@@ -11,7 +11,11 @@ import java.util.stream.Collectors;
 @Component
 public class HabitantDatabaseProvider implements HabitantProvider {
 
-    HabitantJpaRepository repository;
+    private final HabitantJpaRepository repository;
+
+    public HabitantDatabaseProvider(HabitantJpaRepository repository) {
+        this.repository = repository;
+    }
 
     public List<Habitant> getAll() {
         return repository.findAll()
