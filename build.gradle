@@ -54,9 +54,6 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "dumbster:dumbster:${dumbsterVersion}"
 
-    // Annotations
-    implementation "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 }
 
 test {
@@ -74,6 +71,12 @@ test {
         }
     }
 }
+
+task checkCleanArchi(type: Exec) {
+    commandLine 'tools/check-cleanArchi.sh'
+}
+check.dependsOn checkCleanArchi
+
 
 wrapper {
     gradleVersion = '5.3.1'
