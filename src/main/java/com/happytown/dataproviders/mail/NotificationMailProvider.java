@@ -25,19 +25,23 @@ public class NotificationMailProvider implements NotificationProvider {
     private String from;
 
     @Override
-    public void notifier(String to, String subject, String body) throws MessagingException {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", smtpHost);
-        props.put("mail.smtp.port", smtpPort);
+    public void notifier(String to, String subject, String body) throws NotificationException {
+        try {
+            Properties props = new Properties();
+            props.put("mail.smtp.host", smtpHost);
+            props.put("mail.smtp.port", smtpPort);
 
-        Session session = Session.getInstance(props, null);
+            Session session = Session.getInstance(props, null);
 
-        Message msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress(from));
-        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
-        msg.setSubject(subject);
-        msg.setText(body);
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(from));
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            msg.setSubject(subject);
+            msg.setText(body);
+            Transport.send(msg);
+        } catch (MessagingException exception) {
+            throw new NotificationException("Une erreur a eu lieu lors de l'envoi du message a "+ to, exception);
+        }
 
-        Transport.send(msg);
     }
 }
