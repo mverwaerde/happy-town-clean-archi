@@ -15,6 +15,7 @@ ext {
     mockitoVersion = '2.27.0'
     springBootVersion = '2.1.4.RELEASE'
     swaggerVersion = '2.9.2'
+    fakesmtpVersion = '0.1.1'
 }
 
 group = 'com.happytown'
@@ -53,6 +54,9 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "dumbster:dumbster:${dumbsterVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-migrationsupport:${junitVersion}"
+    testCompile "com.github.sleroy:fakesmtp-junit-runner:${fakesmtpVersion}"
+
 
 }
 

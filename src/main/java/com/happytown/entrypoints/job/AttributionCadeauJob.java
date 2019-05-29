@@ -30,7 +30,7 @@ public class AttributionCadeauJob {
         LOGGER.info("Start Task execute");
         String fileName = "src/main/resources/cadeaux.txt";
         LocalDate now = LocalDate.now();
-        attribuerCadeaux.execute(fileName, now, SMTP_HOST, SMTP_PORT);
+        attribuerCadeaux.execute(fileName, now);
         LOGGER.info("End Task execute");
     }
 }

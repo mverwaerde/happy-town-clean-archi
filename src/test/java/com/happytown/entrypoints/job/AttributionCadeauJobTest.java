@@ -34,6 +34,6 @@ public class AttributionCadeauJobTest {
         // Act
         attributionCadeauJob.execute();
         // Assert
-        Mockito.verify(attribuerCadeaux).execute(eq(fileName), any(LocalDate.class), eq(smtpHost), eq(smtpPort));
+        Mockito.verify(attribuerCadeaux).execute(eq(fileName), any(LocalDate.class));
     }
 }

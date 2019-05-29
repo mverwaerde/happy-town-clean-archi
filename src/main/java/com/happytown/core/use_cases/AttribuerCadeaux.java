@@ -6,12 +6,7 @@ import com.happytown.core.entities.TrancheAge;
 import com.happytown.core.entities.TrancheAgeComparator;
 import org.springframework.stereotype.Component;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,13 +20,15 @@ public class AttribuerCadeaux {
 
     private final HabitantProvider habitantProvider;
     private final Random random;
+    private final NotificationProvider notificationProvider;
 
-    public AttribuerCadeaux(HabitantProvider habitantProvider) {
+    public AttribuerCadeaux(HabitantProvider habitantProvider, NotificationProvider notificationProvider) {
         this.habitantProvider = habitantProvider;
+        this.notificationProvider = notificationProvider;
         random = new Random();
     }
 
-    public void execute(String fileName, LocalDate dateCourante, String smtpHost, int smtpPort) throws IOException, MessagingException {
+    public void execute(String fileName, LocalDate dateCourante) throws IOException, MessagingException {
 
         Map<TrancheAge, List<Cadeau>> cadeauxByTrancheAge = buildCadeauxByTrancheAge(fileName);
         List<Habitant> habitantsEligibles = habitantProvider.getElligiblesCadeaux(dateCourante.minusYears(1));
@@ -42,14 +39,14 @@ public class AttribuerCadeaux {
             if (trancheAge.isPresent()) {
                 List<Cadeau> cadeauxPossibles = cadeauxByTrancheAge.get(trancheAge.get());
                 Cadeau randomCadeau = cadeauxPossibles.get(random.nextInt(cadeauxPossibles.size()));
-                envoiMessage(smtpHost, smtpPort, habitant, randomCadeau);
+                envoiMessage(habitant, randomCadeau);
                 habitant.setCadeauOffert(randomCadeau.getDetail());
                 habitant.setDateAttributionCadeau(dateCourante);
                 habitantProvider.save(habitant);
                 habitantsAttributionCadeau.add(habitant);
             }
         }
-        envoiMessageSyntheseCadeauxJournee(smtpHost, smtpPort, habitantsAttributionCadeau, dateCourante);
+        envoiMessageSyntheseCadeauxJournee(habitantsAttributionCadeau, dateCourante);
     }
 
     private Map<TrancheAge, List<Cadeau>> buildCadeauxByTrancheAge(String fileName) throws IOException {
@@ -85,43 +82,42 @@ public class AttribuerCadeaux {
         return optTrancheAge;
     }
 
-    private void envoiMessage(String smtpHost, int smtpPort, Habitant habitant, Cadeau randomCadeau) throws MessagingException {
+    private void envoiMessage(Habitant habitant, Cadeau randomCadeau) throws MessagingException {
         String subject = "Happy Birthday in HappyTown!";
         String beneficiaire = habitant.getEmail();
+        String body = createBodyMessageHabitant(habitant, randomCadeau);
+        envoiMail(subject, beneficiaire, body);
+    }
+
+    private String createBodyMessageHabitant(Habitant habitant, Cadeau randomCadeau) {
         String body = "Bonjour " + habitant.getPrenom() + " " + habitant.getNom() + ",";
         body += "\n\nFélicitations, pour fêter votre premier anniversaire dans notre merveilleuse ville HappyTown, la mairie a le plaisir de vous offrir un cadeau de bienvenue.";
         body += "\n\nVotre cadeau est : " + randomCadeau.getDetail();
         body += "\n\nL'équipe HappyTown";
-        envoiMail(smtpHost, smtpPort, subject, beneficiaire, body);
+        return body;
     }
 
-    private void envoiMessageSyntheseCadeauxJournee(String smtpHost, int smtpPort, List<Habitant> habitantsAttributionCadeau, LocalDate dateCourante) throws MessagingException {
+    private void envoiMessageSyntheseCadeauxJournee(List<Habitant> habitantsAttributionCadeau, LocalDate dateCourante) throws MessagingException {
         if (!habitantsAttributionCadeau.isEmpty()) {
             String subject = String.format("%1$td/%1$tm/%1$tY", dateCourante) + " - Synthese des cadeaux pour envoi";
             String beneficiaire = "mairie+service-cadeau@happytown.com";
-            String body = "Bonjour,";
-            body += "\n\nVoici la liste récapitulative des cadeaux du jour : ";
-            for (Habitant habitantAttributionCadeau : habitantsAttributionCadeau) {
-                body += " \n* " + habitantAttributionCadeau.getPrenom() + " " + habitantAttributionCadeau.getNom() + " : " + habitantAttributionCadeau.getCadeauOffert();
-            }
-            body += "\n\nMerci!";
-            envoiMail(smtpHost, smtpPort, subject, beneficiaire, body);
+            String body = createMessageBodySyntheseCadeauxJournee(habitantsAttributionCadeau);
+            envoiMail(subject, beneficiaire, body);
         }
     }
 
-    private void envoiMail(String smtpHost, int smtpPort, String subject, String beneficiaire, String body) throws MessagingException {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", smtpHost);
-        props.put("mail.smtp.port", "" + smtpPort);
-        Session session = Session.getInstance(props, null);
+    private String createMessageBodySyntheseCadeauxJournee(List<Habitant> habitantsAttributionCadeau){
+        String body = "Bonjour,";
+        body += "\n\nVoici la liste récapitulative des cadeaux du jour : ";
+        for (Habitant habitantAttributionCadeau : habitantsAttributionCadeau) {
+            body += " \n* " + habitantAttributionCadeau.getPrenom() + " " + habitantAttributionCadeau.getNom() + " : " + habitantAttributionCadeau.getCadeauOffert();
+        }
+        body += "\n\nMerci!";
+        return body;
+    }
 
-        Message msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress("mairie@happytown.com"));
-        msg.setRecipient(Message.RecipientType.TO, new InternetAddress(beneficiaire));
-        msg.setSubject(subject);
-        msg.setText(body);
-
-        Transport.send(msg);
+    private void envoiMail(String subject, String beneficiaire, String body) throws MessagingException {
+        notificationProvider.notifier(beneficiaire, subject, body);
     }
 
 }

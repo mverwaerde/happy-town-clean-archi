@@ -30,7 +30,7 @@ public class AttributionCadeauxEndpoint {
     public void attribuerCadeaux() throws IOException, MessagingException {
         String fileName = "src/main/resources/cadeaux.txt";
         LocalDate now = LocalDate.now();
-        attribuerCadeaux.execute(fileName, now, SMTP_HOST, SMTP_PORT);
+        attribuerCadeaux.execute(fileName, now);
     }
 
 }
