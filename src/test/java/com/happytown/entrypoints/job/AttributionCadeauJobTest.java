@@ -26,14 +26,9 @@ public class AttributionCadeauJobTest {
 
     @Test
     public void shouldExecuteAttribuerCadeaux() throws IOException, MessagingException {
-        // Arrange
-        String fileName = "src/main/resources/cadeaux.txt";
-        String smtpHost = "localhost";
-        int smtpPort = 2525;
-
         // Act
         attributionCadeauJob.execute();
         // Assert
-        Mockito.verify(attribuerCadeaux).execute(any(LocalDate.class));
+        Mockito.verify(attribuerCadeaux).execute();
     }
 }

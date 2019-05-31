@@ -14,7 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.mail.MessagingException;
 import java.lang.reflect.Field;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -71,6 +74,8 @@ class AttribuerCadeauxTest {
 
     @BeforeEach
     public void setUp() {
+        Clock clock = Clock.fixed(Instant.parse("2018-10-01T09:10:20.00Z"), ZoneId.of("Europe/Paris"));
+        attribuerCadeaux.setClock(clock);
         doReturn(CADEAUX_BY_TRANCHE_AGE)
                 .when(cadeauByTrancheAgeProvider)
                 .getCadeaux();
@@ -93,7 +98,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("elise.paron@example.fr", "Elise Paron", REGEX_REF_CADEAUX_TRANCHE_AGE_0_3);
@@ -117,7 +122,7 @@ class AttribuerCadeauxTest {
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("manon.giron@example.fr", "Manon Giron", REGEX_REF_CADEAUX_TRANCHE_AGE_3_6);
@@ -140,7 +145,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("lucas.perraud@example.fr", "Lucas Perraud", REGEX_REF_CADEAUX_TRANCHE_AGE_6_10);
@@ -163,7 +168,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("etienne.leduc@example.fr", "Etienne Leduc", REGEX_REF_CADEAUX_TRANCHE_AGE_10_15);
@@ -186,7 +191,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("elodie.guilbaud@example.fr", "Elodie Guilbaud", REGEX_REF_CADEAUX_TRANCHE_AGE_15_20);
@@ -209,7 +214,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("paul.newman@example.fr", "Paul Newman", REGEX_REF_CADEAUX_TRANCHE_AGE_20_30);
@@ -232,7 +237,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("marie.carin@example.fr", "Marie Carin", REGEX_REF_CADEAUX_TRANCHE_AGE_30_40);
@@ -255,7 +260,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("michel.dumond@example.fr", "Michel Dumond", REGEX_REF_CADEAUX_TRANCHE_AGE_40_50);
@@ -278,7 +283,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("julien.avro@example.fr", "Julien Avro", REGEX_REF_CADEAUX_TRANCHE_AGE_50_60);
@@ -301,7 +306,7 @@ class AttribuerCadeauxTest {
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
         // When
-        attribuerCadeaux.execute(NOW);
+        attribuerCadeaux.execute();
 
         // Then
         verifyEmailsSent("yvette.pascalin@example.fr", "Yvette Pascalin", REGEX_REF_CADEAUX_TRANCHE_AGE_60_150);

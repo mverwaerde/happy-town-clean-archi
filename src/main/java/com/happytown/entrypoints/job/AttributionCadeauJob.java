@@ -17,8 +17,6 @@ public class AttributionCadeauJob {
 
     private final AttribuerCadeaux attribuerCadeaux;
 
-    private static final String SMTP_HOST = "localhost";
-    private static final int SMTP_PORT = 2525;
     private static final Logger LOGGER = LoggerFactory.getLogger(AttributionCadeauJob.class);
 
     public AttributionCadeauJob(AttribuerCadeaux attribuerCadeaux) {
@@ -26,11 +24,9 @@ public class AttributionCadeauJob {
     }
 
     @Scheduled(cron = "0 0/2 * * * *")
-    public void execute() throws IOException, MessagingException {
+    public void execute() throws MessagingException {
         LOGGER.info("Start Task execute");
-        String fileName = "src/main/resources/cadeaux.txt";
-        LocalDate now = LocalDate.now();
-        attribuerCadeaux.execute(now);
+        attribuerCadeaux.execute();
         LOGGER.info("End Task execute");
     }
 }

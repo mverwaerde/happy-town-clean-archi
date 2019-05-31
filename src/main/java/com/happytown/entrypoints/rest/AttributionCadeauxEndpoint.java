@@ -18,9 +18,6 @@ public class AttributionCadeauxEndpoint {
 
     private final AttribuerCadeaux attribuerCadeaux;
 
-    private static final String SMTP_HOST = "localhost";
-    private static final int SMTP_PORT = 2525;
-
     public AttributionCadeauxEndpoint(AttribuerCadeaux attribuerCadeaux) {
         this.attribuerCadeaux = attribuerCadeaux;
     }
@@ -28,9 +25,7 @@ public class AttributionCadeauxEndpoint {
     @PostMapping
     @ApiOperation("Permet d'attribuer un cadeau aléatoire aux habitants de Happy Town arrivés depuis plus de 1 an")
     public void attribuerCadeaux() throws IOException, MessagingException {
-        String fileName = "src/main/resources/cadeaux.txt";
-        LocalDate now = LocalDate.now();
-        attribuerCadeaux.execute(now);
+        attribuerCadeaux.execute();
     }
 
 }

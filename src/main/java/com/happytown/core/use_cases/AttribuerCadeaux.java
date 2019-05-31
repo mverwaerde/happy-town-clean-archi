@@ -5,8 +5,7 @@ import com.happytown.core.entities.Habitant;
 import com.happytown.core.entities.TrancheAge;
 import org.springframework.stereotype.Component;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
@@ -19,16 +18,20 @@ public class AttribuerCadeaux {
     private final NotificationProvider notificationProvider;
     private final CadeauByTrancheAgeProvider cadeauByTrancheAgeProvider;
 
-    public AttribuerCadeaux(HabitantProvider habitantProvider, NotificationProvider notificationProvider, CadeauByTrancheAgeProvider cadeauByTrancheAgeProvider) {
+    private Clock clock;
+
+    public AttribuerCadeaux(HabitantProvider habitantProvider, NotificationProvider notificationProvider, CadeauByTrancheAgeProvider cadeauByTrancheAgeProvider, Clock clock) {
         this.habitantProvider = habitantProvider;
         this.notificationProvider = notificationProvider;
         this.cadeauByTrancheAgeProvider = cadeauByTrancheAgeProvider;
+        this.clock = clock;
         random = new Random();
     }
 
-    public void execute(LocalDate dateCourante) throws MessagingException {
+    public void execute() {
 
         Map<TrancheAge, List<Cadeau>> cadeauxByTrancheAge = cadeauByTrancheAgeProvider.getCadeaux();
+        LocalDate dateCourante = LocalDate.now(clock);
         List<Habitant> habitantsEligibles = habitantProvider.getElligiblesCadeaux(dateCourante.minusYears(1));
         List<Habitant> habitantsAttributionCadeau = new ArrayList<>();
 
@@ -58,7 +61,7 @@ public class AttribuerCadeaux {
         return optTrancheAge;
     }
 
-    private void envoiMessage(Habitant habitant, Cadeau randomCadeau) throws MessagingException {
+    private void envoiMessage(Habitant habitant, Cadeau randomCadeau) {
         String subject = "Happy Birthday in HappyTown!";
         String beneficiaire = habitant.getEmail();
         String body = createBodyMessageHabitant(habitant, randomCadeau);
@@ -73,7 +76,7 @@ public class AttribuerCadeaux {
         return body;
     }
 
-    private void envoiMessageSyntheseCadeauxJournee(List<Habitant> habitantsAttributionCadeau, LocalDate dateCourante) throws MessagingException {
+    private void envoiMessageSyntheseCadeauxJournee(List<Habitant> habitantsAttributionCadeau, LocalDate dateCourante){
         if (!habitantsAttributionCadeau.isEmpty()) {
             String subject = String.format("%1$td/%1$tm/%1$tY", dateCourante) + " - Synthese des cadeaux pour envoi";
             String beneficiaire = "mairie+service-cadeau@happytown.com";
@@ -92,8 +95,12 @@ public class AttribuerCadeaux {
         return body;
     }
 
-    private void envoiMail(String subject, String beneficiaire, String body) throws MessagingException {
+    private void envoiMail(String subject, String beneficiaire, String body){
         notificationProvider.notifier(beneficiaire, subject, body);
+    }
+
+    public void setClock(Clock clock) {
+        this.clock = clock;
     }
 
 }
