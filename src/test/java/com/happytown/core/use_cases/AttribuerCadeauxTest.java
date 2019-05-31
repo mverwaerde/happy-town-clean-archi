@@ -1,16 +1,24 @@
 package com.happytown.core.use_cases;
 
+import com.happytown.core.entities.Cadeau;
 import com.happytown.core.entities.Habitant;
+import com.happytown.core.entities.TrancheAge;
+import com.happytown.dataproviders.file.CadeauxByTrancheAgeFileProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -29,6 +37,24 @@ class AttribuerCadeauxTest {
 
     @Mock
     NotificationProvider notificationProvider;
+
+    @Mock
+    CadeauByTrancheAgeProvider cadeauByTrancheAgeProvider;
+
+    private static Map<TrancheAge, List<Cadeau>> CADEAUX_BY_TRANCHE_AGE = new TreeMap<>();
+    static {
+        CadeauxByTrancheAgeFileProvider cadeauxByTrancheAgeFileProvider = new CadeauxByTrancheAgeFileProvider();
+        try {
+            Field pathFileCadeauxByTrancheAge = CadeauxByTrancheAgeFileProvider.class.getDeclaredField("filePath");
+            pathFileCadeauxByTrancheAge.setAccessible(true);
+            pathFileCadeauxByTrancheAge.set(cadeauxByTrancheAgeFileProvider, "src/main/resources/cadeaux.txt");
+            CADEAUX_BY_TRANCHE_AGE = cadeauxByTrancheAgeFileProvider.getCadeaux();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     private static final String FILE_NAME = "src/main/resources/cadeaux.txt";
     private static final LocalDate NOW = LocalDate.of(2018, 10, 1);
@@ -62,6 +88,10 @@ class AttribuerCadeauxTest {
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
+
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
 
@@ -87,6 +117,9 @@ class AttribuerCadeauxTest {
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
 
@@ -109,6 +142,10 @@ class AttribuerCadeauxTest {
         doReturn(newArrayList(habitant))
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
+
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
 
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
@@ -133,6 +170,10 @@ class AttribuerCadeauxTest {
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
+
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
 
@@ -156,6 +197,10 @@ class AttribuerCadeauxTest {
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
+
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
 
@@ -178,6 +223,9 @@ class AttribuerCadeauxTest {
         doReturn(newArrayList(habitant))
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
 
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
@@ -202,6 +250,10 @@ class AttribuerCadeauxTest {
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
+
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
 
@@ -224,6 +276,10 @@ class AttribuerCadeauxTest {
         doReturn(newArrayList(habitant))
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
+
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
 
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
@@ -248,6 +304,10 @@ class AttribuerCadeauxTest {
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
 
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
+
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);
 
@@ -270,6 +330,10 @@ class AttribuerCadeauxTest {
         doReturn(newArrayList(habitant))
                 .when(habitantProvider)
                 .getElligiblesCadeaux(NOW_MINUS_ONE_YEAR);
+
+        doReturn(CADEAUX_BY_TRANCHE_AGE)
+                .when(cadeauByTrancheAgeProvider)
+                .getCadeaux();
 
         // When
         attribuerCadeaux.execute(FILE_NAME, NOW);

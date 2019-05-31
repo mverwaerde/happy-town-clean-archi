@@ -3,14 +3,10 @@ package com.happytown.core.use_cases;
 import com.happytown.core.entities.Cadeau;
 import com.happytown.core.entities.Habitant;
 import com.happytown.core.entities.TrancheAge;
-import com.happytown.core.entities.TrancheAgeComparator;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
@@ -21,16 +17,18 @@ public class AttribuerCadeaux {
     private final HabitantProvider habitantProvider;
     private final Random random;
     private final NotificationProvider notificationProvider;
+    private final CadeauByTrancheAgeProvider cadeauByTrancheAgeProvider;
 
-    public AttribuerCadeaux(HabitantProvider habitantProvider, NotificationProvider notificationProvider) {
+    public AttribuerCadeaux(HabitantProvider habitantProvider, NotificationProvider notificationProvider, CadeauByTrancheAgeProvider cadeauByTrancheAgeProvider) {
         this.habitantProvider = habitantProvider;
         this.notificationProvider = notificationProvider;
+        this.cadeauByTrancheAgeProvider = cadeauByTrancheAgeProvider;
         random = new Random();
     }
 
-    public void execute(String fileName, LocalDate dateCourante) throws IOException, MessagingException {
+    public void execute(String fileName, LocalDate dateCourante) throws MessagingException {
 
-        Map<TrancheAge, List<Cadeau>> cadeauxByTrancheAge = buildCadeauxByTrancheAge(fileName);
+        Map<TrancheAge, List<Cadeau>> cadeauxByTrancheAge = cadeauByTrancheAgeProvider.getCadeaux();
         List<Habitant> habitantsEligibles = habitantProvider.getElligiblesCadeaux(dateCourante.minusYears(1));
         List<Habitant> habitantsAttributionCadeau = new ArrayList<>();
 
@@ -47,28 +45,6 @@ public class AttribuerCadeaux {
             }
         }
         envoiMessageSyntheseCadeauxJournee(habitantsAttributionCadeau, dateCourante);
-    }
-
-    private Map<TrancheAge, List<Cadeau>> buildCadeauxByTrancheAge(String fileName) throws IOException {
-        TrancheAgeComparator trancheAgeComparator = new TrancheAgeComparator();
-        Map<TrancheAge, List<Cadeau>> cadeauxByTrancheAge = new TreeMap<>(trancheAgeComparator);
-        BufferedReader in = new BufferedReader(new FileReader(fileName));
-        in.readLine();
-        String line = "";
-        while ((line = in.readLine()) != null) {
-            String[] cadeauData = line.split(",");
-            String reference = cadeauData[0];
-            String description = cadeauData[1];
-            BigDecimal montant = new BigDecimal(cadeauData[2]);
-            String[] trancheAgeData = cadeauData[3].split("-");
-            TrancheAge trancheAge = new TrancheAge(Integer.valueOf(trancheAgeData[0]), Integer.valueOf(trancheAgeData[1]));
-            if (!cadeauxByTrancheAge.containsKey(trancheAge)) {
-                cadeauxByTrancheAge.put(trancheAge, new ArrayList<>());
-            }
-            Cadeau cadeau = new Cadeau(reference, description, montant, trancheAge);
-            cadeauxByTrancheAge.get(trancheAge).add(cadeau);
-        }
-        return cadeauxByTrancheAge;
     }
 
     private Optional<TrancheAge> getTrancheAgeCadeau(LocalDate dateCourante, Habitant habitant, Set<TrancheAge> trancheAges) {
@@ -106,7 +82,7 @@ public class AttribuerCadeaux {
         }
     }
 
-    private String createMessageBodySyntheseCadeauxJournee(List<Habitant> habitantsAttributionCadeau){
+    private String createMessageBodySyntheseCadeauxJournee(List<Habitant> habitantsAttributionCadeau) {
         String body = "Bonjour,";
         body += "\n\nVoici la liste récapitulative des cadeaux du jour : ";
         for (Habitant habitantAttributionCadeau : habitantsAttributionCadeau) {

@@ -1,6 +1,7 @@
 package com.happytown.core.entities;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Cadeau {
 
@@ -27,4 +28,29 @@ public class Cadeau {
 
     }
 
+    @Override
+    public String toString() {
+        return "Cadeau{" +
+                "reference='" + reference + '\'' +
+                ", description='" + description + '\'' +
+                ", montant=" + montant +
+                ", trancheAge=" + trancheAge +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cadeau cadeau = (Cadeau) o;
+        return Objects.equals(reference, cadeau.reference) &&
+                Objects.equals(description, cadeau.description) &&
+                Objects.equals(montant, cadeau.montant) &&
+                Objects.equals(trancheAge, cadeau.trancheAge);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reference, description, montant, trancheAge);
+    }
 }

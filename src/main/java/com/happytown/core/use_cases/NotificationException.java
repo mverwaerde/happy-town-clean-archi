@@ -1,4 +1,4 @@
-package com.happytown.dataproviders.mail;
+package com.happytown.core.use_cases;
 
 public class NotificationException extends RuntimeException {
 

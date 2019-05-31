@@ -1,5 +1,7 @@
 package com.happytown.core.entities;
 
+import java.util.Objects;
+
 public class TrancheAge {
 
     private Integer ageMin;
@@ -24,5 +26,19 @@ public class TrancheAge {
                 "ageMin=" + ageMin +
                 ", ageMax=" + ageMax +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TrancheAge that = (TrancheAge) o;
+        return Objects.equals(ageMin, that.ageMin) &&
+                Objects.equals(ageMax, that.ageMax);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ageMin, ageMax);
     }
 }

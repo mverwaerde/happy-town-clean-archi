@@ -1,5 +1,6 @@
 package com.happytown.dataproviders.mail;
 
+import com.happytown.core.use_cases.NotificationException;
 import com.happytown.core.use_cases.NotificationProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
