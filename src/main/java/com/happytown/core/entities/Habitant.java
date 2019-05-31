@@ -84,4 +84,14 @@ public class Habitant {
     public String getAdressePostale() {
         return adressePostale;
     }
+
+    public void attribuerCadeau (String detailsCadeau, LocalDate dateAttribution){
+        this.cadeauOffert = detailsCadeau;
+        this.dateAttributionCadeau = dateAttribution;
+    }
+
+    public boolean hasCadeau(){
+        return cadeauOffert != null && dateAttributionCadeau != null;
+    }
+
 }
