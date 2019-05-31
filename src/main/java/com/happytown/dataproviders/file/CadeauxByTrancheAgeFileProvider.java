@@ -4,6 +4,7 @@ import com.happytown.core.entities.Cadeau;
 import com.happytown.core.entities.TrancheAge;
 import com.happytown.core.entities.TrancheAgeComparator;
 import com.happytown.core.use_cases.CadeauByTrancheAgeProvider;
+import com.happytown.core.use_cases.CadeauxByTrancheAgeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class CadeauxByTrancheAgeFileProvider implements CadeauByTrancheAgeProvid
 
 
     @Override
-    public Map<TrancheAge, List<Cadeau>> getCadeaux() {
+    public Map<TrancheAge, List<Cadeau>> getCadeaux() throws CadeauxByTrancheAgeException {
         TrancheAgeComparator trancheAgeComparator = new TrancheAgeComparator();
         Map<TrancheAge, List<Cadeau>> cadeauxByTrancheAge = new TreeMap<>(trancheAgeComparator);
         try {
@@ -32,8 +33,9 @@ public class CadeauxByTrancheAgeFileProvider implements CadeauByTrancheAgeProvid
                     .skip(1)
                     .forEach(line -> addLine(line, cadeauxByTrancheAge));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CadeauxByTrancheAgeException("Le chemin du fichier est errroné "+filePath, e);
         }
+
         return cadeauxByTrancheAge;
     }
 

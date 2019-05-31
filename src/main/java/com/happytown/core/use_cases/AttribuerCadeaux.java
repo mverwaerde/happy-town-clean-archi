@@ -26,7 +26,7 @@ public class AttribuerCadeaux {
         random = new Random();
     }
 
-    public void execute(String fileName, LocalDate dateCourante) throws MessagingException {
+    public void execute(LocalDate dateCourante) throws MessagingException {
 
         Map<TrancheAge, List<Cadeau>> cadeauxByTrancheAge = cadeauByTrancheAgeProvider.getCadeaux();
         List<Habitant> habitantsEligibles = habitantProvider.getElligiblesCadeaux(dateCourante.minusYears(1));

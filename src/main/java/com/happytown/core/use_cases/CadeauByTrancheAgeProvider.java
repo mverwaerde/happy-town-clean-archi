@@ -8,5 +8,6 @@ import java.util.Map;
 
 public interface CadeauByTrancheAgeProvider {
 
-    Map<TrancheAge, List<Cadeau>> getCadeaux();
+    Map<TrancheAge, List<Cadeau>> getCadeaux() throws CadeauxByTrancheAgeException;
 }
+
